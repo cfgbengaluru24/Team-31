@@ -15,6 +15,7 @@ const AddPatientForm = ({ onClose }) => {
     colorChange: '',
     analysis: '',
     comments: '',
+    diagnostics: '',
     locationId: 1, // Example value
     prompt1: '',
     prompt2: '',
@@ -48,10 +49,9 @@ const AddPatientForm = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md overflow-y-auto">
-        <h2 className="text-2xl font-bold mb-4">Add Patient</h2>
-          {/* Render fields here as shown previously */}
-          <form onSubmit={handleSubmit}>
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl h-[72vh] overflow-y-auto">
+        <h2 className="text-2xl font-bold mb-4">Add Patient Details</h2>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
               Name
@@ -92,6 +92,19 @@ const AddPatientForm = ({ onClose }) => {
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostics">
+              Diagnostics
+            </label>
+            <input
+              type="text"
+              id="diagnostics"
+              placeholder="Diagnostics Details"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              value={formData.diagnostics}
+              onChange={handleChange}
+            />
           </div>
 
           <div className="mb-4">
@@ -262,11 +275,6 @@ const AddPatientForm = ({ onClose }) => {
             </div>
           </div>
 
-          
-
-          
-
-          
           <div className="flex justify-end">
             <button
               type="button"
@@ -277,7 +285,7 @@ const AddPatientForm = ({ onClose }) => {
             </button>
             <button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+              className="bg-red-700 text-white px-4 py-2 rounded-lg"
             >
               Submit
             </button>

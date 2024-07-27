@@ -61,6 +61,12 @@ export default function Visit() {
     setIsModalOpen(false);
   };
 
+  const handleFollowUp = (id) => {
+    // Logic for handling follow-up action, e.g., navigating to a follow-up page or showing a modal
+    console.log('Follow up for patient ID:', id);
+    // You can add additional logic here
+  };
+
   const filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -164,6 +170,12 @@ export default function Visit() {
                         <p className="text-gray-600"><span className="font-semibold">Follow-up Duration:</span> {patient.followUpDuration}</p>
                         <p className="text-gray-600"><span className="font-semibold">Comments:</span> {patient.comments}</p>
                         <p className="text-gray-600"><span className="font-semibold">Diagnosis:</span> {patient.diagnosis}</p>
+                        <button
+                          onClick={() => handleFollowUp(patient.id)}
+                          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                        >
+                          Follow Up
+                        </button>
                       </div>
                     )}
                     <div className="absolute top-2 right-2">
@@ -198,3 +210,4 @@ export default function Visit() {
     </div>
   );
 }
+
