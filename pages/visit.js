@@ -1,7 +1,9 @@
+// pages/visit.js
 import { useState, useRef } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase'; // Adjust the path as needed
 import AddPatientForm from '../components/AddPatientForm'; // Import the AddPatientForm component
+import PatientCard from '../components/PatientCard'; // Import the PatientCard component
 
 export default function Visit() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -61,10 +63,12 @@ export default function Visit() {
     setIsModalOpen(false);
   };
 
-  const handleFollowUp = (id) => {
-    // Logic for handling follow-up action, e.g., navigating to a follow-up page or showing a modal
-    console.log('Follow up for patient ID:', id);
-    // You can add additional logic here
+  const handleCommentSave = (index, updatedComments) => {
+    setLocationData(prevData => {
+      const newData = [...prevData];
+      newData[index].comments = updatedComments;
+      return newData;
+    });
   };
 
   const filteredItems = items.filter(item =>
@@ -113,101 +117,57 @@ export default function Visit() {
                       >
                         {item.name}
                       </button>
+                      {item === selectedLocation && (
+                        <ul className="pl-4 mt-2">
+                          <li>Nearby Location 1</li>
+                          <li>Nearby Location 2</li>
+                        </ul>
+                      )}
                     </li>
                   ))
                 ) : (
-                  <li>
-                    <span className="block px-4 py-2 text-gray-500">No results</span>
-                  </li>
+                  <li className="text-gray-500">No matching locations found</li>
                 )}
               </ul>
             </div>
           </details>
         </>
       ) : (
-        <div>
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-3xl font-bold">{selectedLocation.name} Data</h1>
-            <button
-              onClick={handleAddPatient}
-              className="bg-red-900 text-white px-4 py-2 rounded-lg flex items-center hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-green-200 transition-all duration-300"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              Add Patient
-            </button>
-          </div>
+        <>
+          <h1 className="text-3xl font-bold mb-6">{selectedLocation.name} - Patient List</h1>
+          <button
+            className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-all duration-300"
+            onClick={() => setSelectedLocation(null)}
+          >
+            Back to Locations
+          </button>
 
           {loading ? (
-            <p>Loading...</p>
+            <div>Loading...</div>
           ) : (
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {locationData.length > 0 ? (
-                locationData.map((patient, index) => (
-                  <div 
-                    key={index} 
-                    className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer relative"
-                    onClick={() => handleCardClick(index)}
-                  >
-                    <h2 className="text-2xl font-bold mb-2 text-gray-800">{patient.name}</h2>
-                    <p className="text-gray-600"><span className="font-semibold">Age:</span> {patient.age}</p>
-                    <p className="text-gray-600"><span className="font-semibold">Gender:</span> {patient.gender}</p>
-                    {expandedCardIndices.includes(index) && (
-                      <div className="mt-2">
-                        <p className="text-gray-600"><span className="font-semibold">Dosage:</span> {patient.dosage}</p>
-                        <p className="text-gray-600"><span className="font-semibold">Follow-up Duration:</span> {patient.followUpDuration}</p>
-                        <p className="text-gray-600"><span className="font-semibold">Comments:</span> {patient.comments}</p>
-                        <p className="text-gray-600"><span className="font-semibold">Diagnosis:</span> {patient.diagnosis}</p>
-                        <button
-                          onClick={() => handleFollowUp(patient.id)}
-                          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all duration-300"
-                        >
-                          Follow Up
-                        </button>
-                      </div>
-                    )}
-                    <div className="absolute top-2 right-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`h-6 w-6 ${expandedCardIndices.includes(index) ? 'text-gray-700 rotate-180' : 'text-gray-500'}`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 9l6 6 6-6"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p>No patients found for {selectedLocation.name}</p>
-              )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+              {locationData.map((patient, index) => (
+                <PatientCard
+                  key={index}
+                  patient={patient}
+                  index={index}
+                  expandedCardIndices={expandedCardIndices}
+                  handleCardClick={handleCardClick}
+                  handleCommentSave={handleCommentSave}
+                />
+              ))}
             </div>
           )}
 
-          {isModalOpen && (
-            <AddPatientForm onClose={handleCloseModal} />
-          )}
-        </div>
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-300 mt-6"
+            onClick={handleAddPatient}
+          >
+            Add Patient
+          </button>
+          {isModalOpen && <AddPatientForm onClose={handleCloseModal} />}
+        </>
       )}
     </div>
   );
 }
-
