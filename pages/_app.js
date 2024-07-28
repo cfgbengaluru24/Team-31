@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import { Main } from 'next/document';
 import MainPage from '../components/MainPage';
 
+
 function MyApp({ Component, pageProps }) {
   return (
     <div className="flex flex-col min-h-screen">
@@ -14,7 +15,6 @@ function MyApp({ Component, pageProps }) {
         <Component {...pageProps} />
         
       </main>
-      
       <Footer />
     </div>
   );

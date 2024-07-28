@@ -16,7 +16,7 @@ export default function Visit() {
     { name: 'Pochampally', id: 1 },
     { name: 'Palampeta', id: 2 },
     { name: 'Alampur', id: 3 },
-    { name: 'Item 4', id: 4 },
+    { name: 'Beechupally', id: 4 },
   ];
 
   const fetchLocationData = async (locationId) => {
@@ -72,7 +72,7 @@ export default function Visit() {
   );
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto px-6 py-10"> {/* Adjusted padding here */}
       {!selectedLocation ? (
         <>
           <h1 className="text-3xl font-bold mb-6">Visit Locations</h1>
@@ -166,8 +166,7 @@ export default function Visit() {
                     <p className="text-gray-600"><span className="font-semibold">Gender:</span> {patient.gender}</p>
                     {expandedCardIndices.includes(index) && (
                       <div className="mt-2">
-                        <p className="text-gray-600"><span className="font-semibold">Dosage:</span> {patient.dosage}</p>
-                        <p className="text-gray-600"><span className="font-semibold">Follow-up Duration:</span> {patient.followUpDuration}</p>
+                      <p className="text-gray-600"><span className="font-semibold">Date:</span> {patient.date}</p>
                         <p className="text-gray-600"><span className="font-semibold">Comments:</span> {patient.comments}</p>
                         <p className="text-gray-600"><span className="font-semibold">Diagnosis:</span> {patient.diagnosis}</p>
                         <button
@@ -210,4 +209,3 @@ export default function Visit() {
     </div>
   );
 }
-
